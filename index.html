@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réplica - Controle de Missão Houston</title>
+    <style>
+        body {
+            background-color: #030a16;
+            color: #d1e8fa;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1000px;
+            background: #0d1b2a;
+            padding: 15px;
+            border: 2px solid #1b4965;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .clock-box {
+            text-align: center;
+        }
+
+        .clock-label {
+            font-size: 0.8em;
+            color: #62b6cb;
+            text-transform: uppercase;
+        }
+
+        .clock-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff0055;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .panel {
+            background: #0d1b2a;
+            border: 2px solid #1b4965;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 250px;
+        }
+
+        .panel h2 {
+            font-size: 1.1em;
+            color: #bee9e8;
+            margin-top: 0;
+            border-bottom: 1px solid #1b4965;
+            padding-bottom: 5px;
+        }
+
+        .meter {
+            background: #1b4965;
+            height: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            background: #52b788;
+            height: 100%;
+            width: 78%; /* Simulando leitura */
+            border-radius: 10px;
+        }
+
+        .system-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .status-light {
+            width: 12px;
+            height: 12px;
+            background-color: #52b788; /* Verde */
+            border-radius: 50%;
+            box-shadow: 0 0 10px #52b788;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="clock-box">
+            <div class="clock-label">GMT</div>
+            <div class="clock-value" id="gmt-clock">12:34:56</div>
+        </div>
+        <div class="clock-box">
+            <div class="clock-label">MET</div>
+            <div class="clock-value">00:14:02:45</div>
+        </div>
+        <div class="clock-box">
+            <div class="clock-label">ESTÁGIOS</div>
+            <div class="clock-value" style="color: #52b788;">IN ORBIT</div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="panel">
+            <h2>NÍVEIS DE PROPULSÃO</h2>
+            <div class="system-status">
+                <span>TANQUE A: OXIGÊNIO</span>
+                <div class="status-light"></div>
+            </div>
+            <div class="meter">
+                <div class="meter-fill"></div>
+            </div>
+
+            <div class="system-status">
+                <span>TANQUE B: HIDROGÊNIO</span>
+                <div class="status-light"></div>
+            </div>
+            <div class="meter">
+                <div class="meter-fill" style="width: 85%; background-color: #52b788;"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>DIAGRAMA DE ORBITA</h2>
+            <canvas id="orbitCanvas" width="400" height="200" style="background-color:#000814; width:100%; border-radius: 5px;"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Simulando a atualização do relógio GMT
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('gmt-clock').innerText = now.toUTCString().split(' ')[4];
+        }, 1000);
+
+        // Simulando um radar/gráfico simples
+        const canvas = document.getElementById('orbitCanvas');
+        const ctx = canvas.getContext('2d');
+        let angle = 0;
+        function drawRadar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#1b4965';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(200, 100, 80, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#52b788';
+            ctx.beginPath();
+            ctx.moveTo(200, 100);
+            ctx.lineTo(200 + 80 * Math.cos(angle), 100 + 80 * Math.sin(angle));
+            ctx.stroke();
+            angle += 0.05;
+            requestAnimationFrame(drawRadar);
+        }
+        drawRadar();
+    </script>
+</body>
+</html>
 
